@@ -23,46 +23,40 @@
 
 ******************************************************************************/
 
-#ifndef D_VEC_H
-#define D_VEC_H
-
-#undef ulong /* interferes with system includes */
 #include <stdlib.h>
 #include <stdio.h>
-#define ulong mp_limb_t
-
-#include <math.h>
-#include <float.h>
 #include "flint.h"
+#include "d_vec.h"
 
-#ifdef __cplusplus
- extern "C" {
-#endif
+/*
+    Recall the return value conventions for fputc (of type int) 
 
-/* Basic manipulation */
+    ``If there are no errors, the same character that has been written is 
+    returned.  If an error occurs, EOF is returned and the error indicator 
+    is set''
 
-double * _d_vec_init(slong len);
-void _d_vec_clear(double * vec, slong len);
-void _d_vec_set(double * vec1, const double * vec2, slong len2);
-int _d_vec_equal(const double * vec1, const double * vec2, slong len);
-void _d_vec_swap(double * vec1, double * vec2, slong len2);
+    where the EOF macro expands to a negative int, and fprintf (of type int)
 
-/*  Randomisation */
+    ``On success, the total number of characters written is returned.
+    On failure, a negative number is returned.''
+ */
 
-void _d_vec_randtest(double * f, flint_rand_t state, slong len);
-
-/* Input and output */
-
-int _d_vec_fprint(FILE * file, const double * vec, slong len);
-
-static __inline__
-int _d_vec_print(const double * vec, slong len)
+int _d_vec_fprint(FILE * file, const double * vec, slong len)
 {
-    return _d_vec_fprint(stdout, vec, len);
-}
+    int r;
+    slong i;
 
-#ifdef __cplusplus
-}
-#endif
+    r = fprintf(file, "%li", len);
+    if ((len > 0) && (r > 0))
+    {
+        r = fputc(' ', file);
+        for (i = 0; (i < len) && (r > 0); i++)
+        {
+            r = fputc(' ', file);
+            if (r > 0)
+                r = fprintf(file, "%f", *(vec + i));
+        }
+    }
 
-#endif
+    return r;
+}

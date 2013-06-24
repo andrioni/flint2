@@ -27,6 +27,7 @@
 #define D_MAT_H
 
 #undef ulong /* interferes with system includes */
+#include <stdlib.h>
 #include <stdio.h>
 #define ulong mp_limb_t
 

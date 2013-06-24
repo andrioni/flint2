@@ -23,46 +23,34 @@
 
 ******************************************************************************/
 
-#ifndef D_VEC_H
-#define D_VEC_H
-
-#undef ulong /* interferes with system includes */
-#include <stdlib.h>
 #include <stdio.h>
-#define ulong mp_limb_t
-
-#include <math.h>
-#include <float.h>
+#include <stdlib.h>
 #include "flint.h"
+#include "double_extras.h"
+#include "ulong_extras.h"
+#include "d_vec.h"
 
-#ifdef __cplusplus
- extern "C" {
-#endif
-
-/* Basic manipulation */
-
-double * _d_vec_init(slong len);
-void _d_vec_clear(double * vec, slong len);
-void _d_vec_set(double * vec1, const double * vec2, slong len2);
-int _d_vec_equal(const double * vec1, const double * vec2, slong len);
-void _d_vec_swap(double * vec1, double * vec2, slong len2);
-
-/*  Randomisation */
-
-void _d_vec_randtest(double * f, flint_rand_t state, slong len);
-
-/* Input and output */
-
-int _d_vec_fprint(FILE * file, const double * vec, slong len);
-
-static __inline__
-int _d_vec_print(const double * vec, slong len)
+void
+_d_vec_randtest(double * f, flint_rand_t state, 
+                   slong len)
 {
-    return _d_vec_fprint(stdout, vec, len);
-}
+    slong i, sparseness;
 
-#ifdef __cplusplus
-}
-#endif
+    if (n_randint(state, 2))
+    {
+        for (i = 0; i < len; i++)
+            *(f + i) = d_randtest(state);
+    }
+    else
+    {
+        sparseness = 1 + n_randint(state, FLINT_MAX(2, len));
 
-#endif
+        for (i = 0; i < len; i++)
+        {
+            if (n_randint(state, sparseness))
+                *(f + i) = 0.0;
+            else
+                *(f + i) = d_randtest(state);
+        }
+    }
+}
