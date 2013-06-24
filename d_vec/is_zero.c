@@ -20,52 +20,18 @@
 /******************************************************************************
 
     Copyright (C) 2013 Alessandro Andrioni
-
+   
 ******************************************************************************/
 
-#ifndef D_VEC_H
-#define D_VEC_H
-
-#undef ulong /* interferes with system includes */
-#include <stdlib.h>
-#include <stdio.h>
-#define ulong mp_limb_t
-
-#include <math.h>
-#include <float.h>
 #include "flint.h"
+#include "d_vec.h"
 
-#ifdef __cplusplus
- extern "C" {
-#endif
-
-/* Basic manipulation */
-
-double * _d_vec_init(slong len);
-void _d_vec_clear(double * vec, slong len);
-void _d_vec_set(double * vec1, const double * vec2, slong len2);
-int _d_vec_equal(const double * vec1, const double * vec2, slong len);
-int _d_vec_is_zero(const double * vec, slong len);
-void _d_vec_swap(double * vec1, double * vec2, slong len2);
-void _d_vec_zero(double * vec, slong len);
-void _d_vec_neg(double * vec1, const double * vec2, slong len2);
-
-/*  Randomisation */
-
-void _d_vec_randtest(double * f, flint_rand_t state, slong len);
-
-/* Input and output */
-
-int _d_vec_fprint(FILE * file, const double * vec, slong len);
-
-static __inline__
-int _d_vec_print(const double * vec, slong len)
+int
+_d_vec_is_zero(const double * vec, slong len)
 {
-    return _d_vec_fprint(stdout, vec, len);
+    slong i;
+    for (i = 0; i < len; i++)
+        if (vec[i] != 0L)
+            return 0;
+    return 1;
 }
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif

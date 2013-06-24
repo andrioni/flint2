@@ -35,38 +35,61 @@ main(void)
     int i, result;
     flint_rand_t state;
 
-    printf("swap....");
+    printf("neg....");
     fflush(stdout);
 
     flint_randinit(state);
 
+    /* Check aliasing of a and b */
     for (i = 0; i < 1000 * flint_test_multiplier(); i++)
     {
-        double *a, *b, *c;
+        double *a, *b;
         slong len = n_randint(state, 100);
 
         a = _d_vec_init(len);
         b = _d_vec_init(len);
-        c = _d_vec_init(len);
         _d_vec_randtest(a, state, len);
-        _d_vec_randtest(b, state, len);
 
-        _d_vec_set(c, b, len);
-        _d_vec_swap(a, b, len);
+        _d_vec_neg(b, a, len);
+        _d_vec_neg(a, a, len);
 
-        result = (_d_vec_equal(a, c, len));
+        result = (_d_vec_equal(a, b, len));
         if (!result)
         {
             printf("FAIL:\n");
             _d_vec_print(a, len), printf("\n\n");
             _d_vec_print(b, len), printf("\n\n");
-            _d_vec_print(c, len), printf("\n\n");
             abort();
         }
 
         _d_vec_clear(a, len);
         _d_vec_clear(b, len);
-        _d_vec_clear(c, len);
+    }
+
+    /* Check -(-a) == a */
+    for (i = 0; i < 1000 * flint_test_multiplier(); i++)
+    {
+        double *a, *b;
+        slong len = n_randint(state, 100);
+
+        a = _d_vec_init(len);
+        b = _d_vec_init(len);
+        _d_vec_randtest(a, state, len);
+
+        _d_vec_neg(b, a, len);
+        _d_vec_neg(b, b, len);
+
+        result = (_d_vec_equal(a, b, len));
+        if (!result)
+        {
+            printf("FAIL:\n");
+            _d_vec_print(a, len), printf("\n\n");
+            _d_vec_print(b, len), printf("\n\n");
+            abort();
+        }
+
+        _d_vec_clear(a, len);
+        _d_vec_clear(b, len);
     }
 
     flint_randclear(state);

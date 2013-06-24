@@ -23,49 +23,46 @@
 
 ******************************************************************************/
 
-#ifndef D_VEC_H
-#define D_VEC_H
-
-#undef ulong /* interferes with system includes */
-#include <stdlib.h>
 #include <stdio.h>
-#define ulong mp_limb_t
-
-#include <math.h>
-#include <float.h>
+#include <stdlib.h>
 #include "flint.h"
+#include "d_vec.h"
+#include "ulong_extras.h"
 
-#ifdef __cplusplus
- extern "C" {
-#endif
-
-/* Basic manipulation */
-
-double * _d_vec_init(slong len);
-void _d_vec_clear(double * vec, slong len);
-void _d_vec_set(double * vec1, const double * vec2, slong len2);
-int _d_vec_equal(const double * vec1, const double * vec2, slong len);
-int _d_vec_is_zero(const double * vec, slong len);
-void _d_vec_swap(double * vec1, double * vec2, slong len2);
-void _d_vec_zero(double * vec, slong len);
-void _d_vec_neg(double * vec1, const double * vec2, slong len2);
-
-/*  Randomisation */
-
-void _d_vec_randtest(double * f, flint_rand_t state, slong len);
-
-/* Input and output */
-
-int _d_vec_fprint(FILE * file, const double * vec, slong len);
-
-static __inline__
-int _d_vec_print(const double * vec, slong len)
+int
+main(void)
 {
-    return _d_vec_fprint(stdout, vec, len);
-}
+    int i, result;
+    flint_rand_t state;
 
-#ifdef __cplusplus
-}
-#endif
+    printf("zero....");
+    fflush(stdout);
 
-#endif
+    flint_randinit(state);
+
+    /* Check it's zero */
+    for (i = 0; i < 1000 * flint_test_multiplier(); i++)
+    {
+        double *a;
+        slong len = n_randint(state, 100);
+
+        a = _d_vec_init(len);
+        _d_vec_randtest(a, state, len);
+
+        _d_vec_zero(a, len);
+
+        result = (_d_vec_is_zero(a, len));
+        if (!result)
+        {
+            printf("FAIL:\n");
+            _d_vec_print(a, len), printf("\n\n");
+            abort();
+        }
+
+        _d_vec_clear(a, len);
+    }
+
+    flint_randclear(state);
+    printf("PASS\n");
+    return 0;
+}
