@@ -64,6 +64,14 @@ int _d_vec_print(const double * vec, slong len)
     return _d_vec_fprint(stdout, vec, len);
 }
 
+/* Addition */
+
+void _d_vec_add(double * res, const double * vec1,
+                                            const double * vec2, slong len2);
+
+void _d_vec_sub(double * res, const double * vec1,
+                                            const double * vec2, slong len2);
+
 #ifdef __cplusplus
 }
 #endif
