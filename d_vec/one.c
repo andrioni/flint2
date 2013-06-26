@@ -27,9 +27,9 @@
 #include "d_vec.h"
 
 void
-_d_vec_zero(double * vec, slong len)
+_d_vec_one(double * vec, slong len)
 {
     slong i;
     for (i = 0; i < len; i++)
-        *(vec + i) = 0L;
+        *(vec + i) = 1L;
 }

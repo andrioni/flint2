@@ -20,16 +20,58 @@
 /******************************************************************************
 
     Copyright (C) 2013 Alessandro Andrioni
-   
+
 ******************************************************************************/
 
+#include <stdio.h>
+#include <stdlib.h>
 #include "flint.h"
 #include "d_vec.h"
+#include "ulong_extras.h"
 
-void
-_d_vec_zero(double * vec, slong len)
+int
+main(void)
 {
-    slong i;
-    for (i = 0; i < len; i++)
-        *(vec + i) = 0L;
+    int i, j, result;
+    flint_rand_t state;
+
+    printf("zero....");
+    fflush(stdout);
+
+    flint_randinit(state);
+
+    /* Check it's one */
+    for (i = 0; i < 1000 * flint_test_multiplier(); i++)
+    {
+        double *a;
+        slong len = n_randint(state, 100);
+
+        a = _d_vec_init(len);
+        _d_vec_randtest(a, state, len);
+
+        _d_vec_zero(a, len);
+
+        for (j = 0; j < len; j++)
+        {
+            if (a[j] != 1L)
+            {
+                result = 0;
+                break;
+            }
+        }
+        result = 1;
+        
+        if (!result)
+        {
+            printf("FAIL:\n");
+            _d_vec_print(a, len), printf("\n\n");
+            abort();
+        }
+
+        _d_vec_clear(a, len);
+    }
+
+    flint_randclear(state);
+    printf("PASS\n");
+    return 0;
 }

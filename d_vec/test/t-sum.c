@@ -41,7 +41,7 @@ main(void)
 
     flint_randinit(state);
 
-    for (i = 0; i < 10000 * flint_test_multiplier(); i++)
+    for (i = 0; i < 100000 * flint_test_multiplier(); i++)
     {
         double *a, *b;
         double x, y, z;
@@ -59,7 +59,7 @@ main(void)
         x = x + y;
         z = _d_vec_sum(a, len1 + len2);
 
-        /* Slightly overstated precision */
+        /* Slightly overstated tolerance */
         result = (x - z <= D_EPS * 10 * (x + z));
         if (!result)
         {

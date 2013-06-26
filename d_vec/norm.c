@@ -20,16 +20,46 @@
 /******************************************************************************
 
     Copyright (C) 2013 Alessandro Andrioni
-   
+
 ******************************************************************************/
 
 #include "flint.h"
 #include "d_vec.h"
 
-void
-_d_vec_zero(double * vec, slong len)
+double
+_d_vec_norm(const double * vec, slong len)
 {
-    slong i;
-    for (i = 0; i < len; i++)
-        *(vec + i) = 0L;
+    if (len <= 1)
+    {
+        if (len == 1)
+            return fabs(*vec);
+        else
+            return 0L;
+    }
+    else
+    {
+        slong i;
+        double res, scale, ssq, absv;
+
+        scale = 0L;
+        ssq = 1L;
+        for (i = 0; i < len; i++)
+        {
+            if (vec[i] != 0L)
+            {
+                absv = fabs(vec[i]);
+                if (scale < absv)
+                {
+                    ssq = 1L + ssq * (scale/absv)*(scale/absv);
+                    scale = absv;
+                }
+                else
+                {
+                    ssq = ssq + (absv/scale)*(absv/scale);
+                }
+            }
+        }
+        res = scale * sqrt(ssq);
+        return res;
+    }
 }
