@@ -66,6 +66,12 @@ void _mpfr_vec_add(mpfr * res, const mpfr * vec1, const mpfr * vec2,
 void _mpfr_vec_sub(mpfr * res, const mpfr * vec1, const mpfr * vec2, 
                                             slong length);
 
+/* Vector sum and product */
+
+void _mpfr_vec_sum(mpfr_t res, const mpfr * vec, slong length);
+
+void _mpfr_vec_prod(mpfr_t res, const mpfr * vec, slong length);
+
 /* Scalar operations */
 
 void _mpfr_vec_scalar_mul_2exp(mpfr * res, const mpfr * vec, 
@@ -82,9 +88,3 @@ void _mpfr_vec_scalar_product(mpfr_t res, const mpfr * vec1,
 #endif
 
 #endif
-
-
-
-
-
-
