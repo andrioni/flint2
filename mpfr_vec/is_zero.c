@@ -34,5 +34,7 @@ _mpfr_vec_is_zero(const mpfr * vec, slong length)
 {
     slong i;
     for (i = 0; i < length; i++)
-        mpfr_zero_p(vec + i);
+        if (!mpfr_zero_p(vec + i))
+            return 0;
+    return 1;
 }
