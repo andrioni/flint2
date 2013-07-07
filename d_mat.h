@@ -52,7 +52,7 @@ typedef d_mat_struct d_mat_t[1];
 
 /* Basic manipulation ***/
 
-#define d_mat_entry(mat, i, j) ((mat)->rows[i] + (j))
+#define d_mat_entry(mat, i, j) (*((mat)->rows[i] + (j)))
 #define d_mat_nrows(mat) ((mat)->r)
 #define d_mat_ncols(mat) ((mat)->c)
 
@@ -61,6 +61,30 @@ void d_mat_init_set(d_mat_t mat, const d_mat_t src);
 void d_mat_swap(d_mat_t mat1, d_mat_t mat2);
 void d_mat_set(d_mat_t mat1, const d_mat_t mat2);
 void d_mat_clear(d_mat_t mat);
+
+int d_mat_equal(const d_mat_t mat1, const d_mat_t mat2);
+int d_mat_approx(const d_mat_t mat1, const d_mat_t mat2, double tol);
+int d_mat_is_zero(const d_mat_t mat);
+
+void d_mat_zero(d_mat_t mat);
+void d_mat_one(d_mat_t mat);
+
+/* Random matrices */
+
+void d_mat_randtest(d_mat_t mat, flint_rand_t state);
+
+/* Transpose */
+
+void d_mat_transpose(d_mat_t B, const d_mat_t A);
+
+/* Addition and subtraction */
+
+void d_mat_add(d_mat_t C, const d_mat_t A, const d_mat_t B);
+void d_mat_sub(d_mat_t C, const d_mat_t A, const d_mat_t B);
+void d_mat_neg(d_mat_t B, const d_mat_t A);
+
+/* Multiplication */
+void d_mat_mul(d_mat_t C, const d_mat_t A, const d_mat_t B);
 
 #ifdef __cplusplus
 }

@@ -17,9 +17,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
 =============================================================================*/
-/*****************************************************************************
+/******************************************************************************
 
-    Copyright (C) 2010 William Hart
+    Copyright (C) 2013 Alessandro Andrioni
 
 ******************************************************************************/
 
@@ -30,9 +30,9 @@
 #include "mpfr_vec.h"
 
 void
-_mpfr_vec_scalar_mul_2exp(mpfr * res, const mpfr * vec, slong length, mp_bitcnt_t exp)
+_mpfr_vec_neg(mpfr * vec1, const mpfr * vec2, slong length)
 {
     slong i;
     for (i = 0; i < length; i++)
-        mpfr_mul_2exp(res + i, vec + i, exp, GMP_RNDN);
+        mpfr_neg(vec1 + i, vec2 + i, GMP_RNDN);
 }

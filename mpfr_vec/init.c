@@ -29,13 +29,13 @@
 #include "flint.h"
 #include "mpfr_vec.h"
 
-__mpfr_struct *
+mpfr *
 _mpfr_vec_init(slong length, mp_bitcnt_t prec)
 {
     slong i;
 
-    __mpfr_struct *vec =
-        (__mpfr_struct *) flint_malloc(length * sizeof(__mpfr_struct));
+    mpfr *vec =
+        (mpfr *) flint_malloc(length * sizeof(mpfr));
 
     for (i = 0; i < length; i++)
         mpfr_init2(vec + i, prec);

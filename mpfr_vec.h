@@ -20,6 +20,7 @@
 /******************************************************************************
 
  Copyright (C) 2010 William Hart
+ Copyright (C) 2013 Alessandro Andrioni
  
 ******************************************************************************/
 
@@ -33,22 +34,48 @@
  extern "C" {
 #endif
 
-__mpfr_struct * _mpfr_vec_init(slong length, mp_bitcnt_t prec);
+/* Basic manipulation */
 
-void _mpfr_vec_clear(__mpfr_struct * vec, slong length);
+mpfr * _mpfr_vec_init(slong length, mp_bitcnt_t prec);
+
+void _mpfr_vec_clear(mpfr * vec, slong length);
+
+void _mpfr_vec_set(mpfr * vec1, const mpfr * vec2, slong length);
+
+int _mpfr_vec_equal(const mpfr * vec1, const mpfr * vec2, slong length);
 
 void _mpfr_vec_zero(mpfr * vec, slong length);
 
-void _mpfr_vec_set(mpfr * vec1, mpfr * vec2, slong length);
+void _mpfr_vec_one(mpfr * vec, slong length);
 
-void _mpfr_vec_add(mpfr * res, mpfr * vec1, mpfr * vec2, slong length);
+void _mpfr_vec_neg(mpfr * vec1, const mpfr * vec2, slong length);
 
-void _mpfr_vec_scalar_mul_2exp(mpfr * res, mpfr * vec, slong length, mp_bitcnt_t exp);
+int _mpfr_vec_is_zero(const mpfr * vec, slong length);
 
-void _mpfr_vec_scalar_mul_mpfr(mpfr * res, mpfr * vec, slong length, mpfr_t c);
+void _mpfr_vec_swap(mpfr * vec1, mpfr * vec2, slong length);
 
-void _mpfr_vec_scalar_product(mpfr_t res, __mpfr_struct * vec1, 
-								    __mpfr_struct * vec2, slong length);
+/* Randomisation */
+
+void _mpfr_vec_randtest(mpfr * vec1, flint_rand_t state, slong length);
+
+/* Addition */
+
+void _mpfr_vec_add(mpfr * res, const mpfr * vec1, const mpfr * vec2, 
+                                            slong length);
+
+void _mpfr_vec_sub(mpfr * res, const mpfr * vec1, const mpfr * vec2, 
+                                            slong length);
+
+/* Scalar operations */
+
+void _mpfr_vec_scalar_mul_2exp(mpfr * res, const mpfr * vec, 
+                                            slong length, mp_bitcnt_t exp);
+
+void _mpfr_vec_scalar_mul_mpfr(mpfr * res, const mpfr * vec,
+                                            slong length, mpfr_t c);
+
+void _mpfr_vec_scalar_product(mpfr_t res, const mpfr * vec1, 
+								            const mpfr * vec2, slong length);
 
 #ifdef __cplusplus
 }

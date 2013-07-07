@@ -31,5 +31,5 @@ _d_vec_neg(double * vec1, const double * vec2, slong len2)
 {
     slong i;
     for (i = 0; i < len2; i++)
-        *(vec1 + i) = *(vec2 + i);
+        *(vec1 + i) = - *(vec2 + i);
 }

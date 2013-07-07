@@ -92,6 +92,32 @@ main(void)
         _d_vec_clear(b, len);
     }
 
+    /* Check that a + (-a) = 0 */
+    for (i = 0; i < 1000 * flint_test_multiplier(); i++)
+    {
+        double *a, *b;
+        slong len = n_randint(state, 100);
+
+        a = _d_vec_init(len);
+        b = _d_vec_init(len);
+        _d_vec_randtest(a, state, len);
+
+        _d_vec_neg(b, a, len);
+        _d_vec_add(a, a, b, len);
+
+        result = (_d_vec_is_zero(a, len));
+        if (!result)
+        {
+            printf("FAIL:\n");
+            _d_vec_print(a, len), printf("\n\n");
+            _d_vec_print(b, len), printf("\n\n");
+            abort();
+        }
+
+        _d_vec_clear(a, len);
+        _d_vec_clear(b, len);
+    }
+
     flint_randclear(state);
     printf("PASS\n");
     return 0;

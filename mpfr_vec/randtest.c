@@ -17,9 +17,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
 =============================================================================*/
-/*****************************************************************************
+/******************************************************************************
 
-    Copyright (C) 2010 William Hart
+    Copyright (C) 2013 Alessandro Andrioni
 
 ******************************************************************************/
 
@@ -28,11 +28,28 @@
 #include <mpfr.h>
 #include "flint.h"
 #include "mpfr_vec.h"
+#include "ulong_extras.h"
 
 void
-_mpfr_vec_scalar_mul_2exp(mpfr * res, const mpfr * vec, slong length, mp_bitcnt_t exp)
+_mpfr_randtest(mpfr * vec, flint_rand_t state, slong length)
 {
-    slong i;
-    for (i = 0; i < length; i++)
-        mpfr_mul_2exp(res + i, vec + i, exp, GMP_RNDN);
+    slong i, sparseness;
+
+    if (n_randint(state, 2))
+    {
+        for (i = 0; i < length; i++)
+            mpfr_urandomb(vec + i, state->gmp_state);
+    }
+    else
+    {
+        sparseness = 1 + n_randint(state, FLINT_MAX(2, length));
+
+        for (i = 0; i < length; i++)
+        {
+            if (n_randint(state, sparseness))
+                mpfr_set_ui(vec + i, 0, GMP_RNDN);
+            else
+                mpfr_urandomb(vec + i, state->gmp_state);
+        }
+    }
 }
