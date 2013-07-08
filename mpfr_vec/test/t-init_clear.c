@@ -45,12 +45,12 @@ main(void)
     {
         __mpfr_struct *a;
         slong j, length = n_randint(state, 100);
-        mp_prec_t prec = n_randint(state, 200) + MPFR_PREC_MIN;
+        mpfr_prec_t prec = n_randint(state, 200) + MPFR_PREC_MIN;
 
         a = _mpfr_vec_init(length, prec);
 
         for (j = 0; j < length; j++)
-            mpfr_set_ui(a + j, 0, GMP_RNDN);
+            mpfr_set_ui(a + j, 0, MPFR_RNDN);
 
         _mpfr_vec_clear(a, length);
     }

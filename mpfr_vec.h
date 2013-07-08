@@ -36,7 +36,7 @@
 
 /* Basic manipulation */
 
-mpfr * _mpfr_vec_init(slong length, mp_bitcnt_t prec);
+mpfr * _mpfr_vec_init(slong length, mpfr_prec_t prec);
 
 void _mpfr_vec_clear(mpfr * vec, slong length);
 
@@ -72,16 +72,18 @@ void _mpfr_vec_sum(mpfr_t res, const mpfr * vec, slong length);
 
 void _mpfr_vec_prod(mpfr_t res, const mpfr * vec, slong length);
 
+/* Inner product and norm */
+
+void _mpfr_vec_dot(mpfr_t res, const mpfr * vec1, const mpfr * vec2,
+                                            slong length);
+
 /* Scalar operations */
 
 void _mpfr_vec_scalar_mul_2exp(mpfr * res, const mpfr * vec, 
-                                            slong length, mp_bitcnt_t exp);
+                                            slong length, mpfr_prec_t exp);
 
 void _mpfr_vec_scalar_mul_mpfr(mpfr * res, const mpfr * vec,
                                             slong length, mpfr_t c);
-
-void _mpfr_vec_scalar_product(mpfr_t res, const mpfr * vec1, 
-								            const mpfr * vec2, slong length);
 
 #ifdef __cplusplus
 }

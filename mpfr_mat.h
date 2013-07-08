@@ -20,6 +20,7 @@
 /******************************************************************************
 
     Copyright (C) 2010 William Hart
+    Copyright (C) 2013 Alessandro Andrioni
 
 ******************************************************************************/
 
@@ -35,11 +36,11 @@
 
 typedef struct
 {
-    __mpfr_struct * entries;
+    mpfr * entries;
     slong r;
     slong c;
     mp_bitcnt_t prec;
-    __mpfr_struct ** rows;
+    mpfr ** rows;
 } mpfr_mat_struct;
 
 /* fmpz_mat_t allows reference-like semantics for fmpz_mat_struct */

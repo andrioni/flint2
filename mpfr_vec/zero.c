@@ -34,5 +34,5 @@ _mpfr_vec_zero(mpfr * vec, slong length)
 {
     slong i;
     for (i = 0; i < length; i++)
-        mpfr_set_ui(vec + i, 0, GMP_RNDN);
+        mpfr_set_ui(vec + i, 0, MPFR_RNDN);
 }

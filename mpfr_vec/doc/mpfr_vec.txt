@@ -21,6 +21,7 @@
 
     Copyright (C) 2010 William Hart
     Copyright (C) 2010 Andy Novocin
+    Copyright (C) 2013 Alessandro Andrioni
 
 ******************************************************************************/
 
@@ -30,12 +31,12 @@
 
 *******************************************************************************
 
-__mpfr_struct * _mpfr_vec_init(slong len, mp_bitcnt_t prec)
+mpfr * _mpfr_vec_init(slong len, mpfr_prec_t prec)
 
     Returns a vector of the given length of initialised \code{mpfr}'s 
     with the given exact precision.
  
-void _mpfr_vec_clear(__mpfr_struct * vec, slong len)
+void _mpfr_vec_clear(mpfr * vec, slong len)
 
     Clears the given vector.
 
@@ -64,13 +65,12 @@ void _mpfr_vec_scalar_mul_mpfr(mpfr * res, mpfr * vec, slong len, mpfr_t c)
     Multiplies the vector with given length by the scalar $c$ and 
     sets \code{res} to the result.
 
-void _mpfr_vec_scalar_mul_2exp(mpfr * res, 
-                               mpfr * vec, slong len, mp_bitcnt_t exp)
+void _mpfr_vec_scalar_mul_2exp(mpfr * res, mpfr * vec, slong len,
+                                                       mpfr_prec_t exp)
 
     Multiplies the given vector of the given length by \code{2^exp}.
 
-void _mpfr_vec_scalar_product(mpfr_t res, __mpfr_struct * vec1, 
-                                          __mpfr_struct * vec2, slong len)
+void _mpfr_vec_dot(mpfr_t res, mpfr * vec1, mpfr * vec2, slong len)
 
    Sets \code{res} to the scalar product of \code{(vec1, len)} with 
     \code{(vec2, len)}. Assumes \code{len > 0}.

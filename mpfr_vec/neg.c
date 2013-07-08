@@ -34,5 +34,5 @@ _mpfr_vec_neg(mpfr * vec1, const mpfr * vec2, slong length)
 {
     slong i;
     for (i = 0; i < length; i++)
-        mpfr_neg(vec1 + i, vec2 + i, GMP_RNDN);
+        mpfr_neg(vec1 + i, vec2 + i, MPFR_RNDN);
 }

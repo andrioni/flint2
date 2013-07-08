@@ -35,17 +35,17 @@ _mpfr_vec_sum(mpfr_t res, const mpfr * vec, slong length)
     if (length <= 1)
     {
         if (length == 1)
-            mpfr_set(res, vec, GMP_RNDN);
+            mpfr_set(res, vec, MPFR_RNDN);
         else
-            mpfr_set_ui(res, 0, GMP_RNDN);
+            mpfr_set_ui(res, 0, MPFR_RNDN);
     }
     else if (length <= 3)
     {
         slong i;
 
-        mpfr_add(res, vec, vec + 1, GMP_RNDN);
+        mpfr_add(res, vec, vec + 1, MPFR_RNDN);
         for (i = 2; i < length; i++)
-            mpfr_add(res, res, vec + i, GMP_RNDN);
+            mpfr_add(res, res, vec + i, MPFR_RNDN);
     }
     else
     {
@@ -54,7 +54,7 @@ _mpfr_vec_sum(mpfr_t res, const mpfr * vec, slong length)
         mpfr_init2(tmp, mpfr_get_prec(res));
         _mpfr_vec_sum(res, vec, m);
         _mpfr_vec_sum(tmp, vec + m, length - m);
-        mpfr_add(res, res, tmp, GMP_RNDN);
+        mpfr_add(res, res, tmp, MPFR_RNDN);
         mpfr_clear(tmp);
     }
 }

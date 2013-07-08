@@ -35,7 +35,7 @@ main(void)
     int i, result;
     flint_rand_t state;
 
-    printf("innerprod....");
+    printf("dot....");
     fflush(stdout);
 
     flint_randinit(state);
@@ -55,7 +55,7 @@ main(void)
         _d_vec_one(b, len);
 
         x = _d_vec_sum(a, len);
-        y = _d_vec_innerprod(a, b, len);
+        y = _d_vec_dot(a, b, len);
 
         result = (x == y);
         if (!result)

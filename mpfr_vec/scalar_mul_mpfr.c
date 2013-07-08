@@ -34,5 +34,5 @@ _mpfr_vec_scalar_mul_mpfr(mpfr * res, const mpfr * vec, slong length, mpfr_t c)
 {
     slong i;
     for (i = 0; i < length; i++)
-        mpfr_mul(res + i, vec + i, c, GMP_RNDN);
+        mpfr_mul(res + i, vec + i, c, MPFR_RNDN);
 }

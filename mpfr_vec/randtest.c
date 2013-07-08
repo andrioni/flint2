@@ -47,7 +47,7 @@ _mpfr_randtest(mpfr * vec, flint_rand_t state, slong length)
         for (i = 0; i < length; i++)
         {
             if (n_randint(state, sparseness))
-                mpfr_set_ui(vec + i, 0, GMP_RNDN);
+                mpfr_set_ui(vec + i, 0, MPFR_RNDN);
             else
                 mpfr_urandomb(vec + i, state->gmp_state);
         }

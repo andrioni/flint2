@@ -19,33 +19,29 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2013 Alessandro Andrioni
+    Copyright (C) 2010 William Hart
 
 ******************************************************************************/
 
+#include <stdlib.h>
+#include <gmp.h>
+#include <mpfr.h>
 #include "flint.h"
-#include "d_vec.h"
+#include "mpfr_vec.h"
 
-double
-_d_vec_innerprod(const double * vec1, const double * vec2, slong len)
+void
+_mpfr_vec_dot(mpfr_t res, const mpfr * vec1, const mpfr * vec2, slong length)
 {
-    if (len <= 1)
+    slong i;
+    mpfr_t tmp;
+    mpfr_init(tmp);
+
+    mpfr_mul(res, vec1, vec2, MPFR_RNDN);
+    for (i = 1; i < length; i++)
     {
-        if (len == 1)
-            return *vec1 * *vec2;
-        else
-            return 0L;
+        mpfr_mul(tmp, vec1 + i, vec2 + i, MPFR_RNDN);
+        mpfr_add(res, res, tmp, MPFR_RNDN);
     }
-    else
-    {
-        slong i;
-        double res;
 
-        res = *vec1 * *vec2 + *(vec1 + 1) * *(vec2 + 1);
-
-        for (i = 2; i < len; i++)
-            res += *(vec1 + i) * *(vec2 + i);
-
-        return res;
-    }
+    mpfr_clear(tmp);
 }

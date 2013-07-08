@@ -83,7 +83,7 @@ double _d_vec_prod(const double * vec, slong len);
 
 /* Inner product and norm */
 
-double _d_vec_innerprod(const double * vec1, const double * vec2, slong len);
+double _d_vec_dot(const double * vec1, const double * vec2, slong len);
 
 double _d_vec_norm(const double * vec1, slong len);
 

@@ -19,30 +19,33 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2010 William Hart
+    Copyright (C) 2013 Alessandro Andrioni
 
 ******************************************************************************/
 
-#include <stdlib.h>
-#include <gmp.h>
-#include <mpfr.h>
 #include "flint.h"
-#include "mpfr_vec.h"
+#include "d_vec.h"
 
-void
-_mpfr_vec_scalar_product(mpfr_t res, const mpfr * vec1,
-                         const mpfr * vec2, slong length)
+double
+_d_vec_dot(const double * vec1, const double * vec2, slong len)
 {
-    slong i;
-    mpfr_t tmp;
-    mpfr_init(tmp);
-
-    mpfr_mul(res, vec1, vec2, GMP_RNDN);
-    for (i = 1; i < length; i++)
+    if (len <= 1)
     {
-        mpfr_mul(tmp, vec1 + i, vec2 + i, GMP_RNDN);
-        mpfr_add(res, res, tmp, GMP_RNDN);
+        if (len == 1)
+            return *vec1 * *vec2;
+        else
+            return 0L;
     }
+    else
+    {
+        slong i;
+        double res;
 
-    mpfr_clear(tmp);
+        res = *vec1 * *vec2 + *(vec1 + 1) * *(vec2 + 1);
+
+        for (i = 2; i < len; i++)
+            res += *(vec1 + i) * *(vec2 + i);
+
+        return res;
+    }
 }

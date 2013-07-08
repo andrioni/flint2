@@ -47,13 +47,13 @@ main(void)
         slong j, k;
         slong rows = n_randint(state, 100);
         slong cols = n_randint(state, 100);
-        mp_prec_t prec = n_randint(state, 200) + MPFR_PREC_MIN;
+        mpfr_prec_t prec = n_randint(state, 200) + MPFR_PREC_MIN;
 
         mpfr_mat_init(a, rows, cols, prec);
 
         for (j = 0; j < rows; j++)
             for (k = 0; k < cols; k++)
-                mpfr_set_ui(a->rows[j] + k, 0, GMP_RNDN);
+                mpfr_set_ui(a->rows[j] + k, 0, MPFR_RNDN);
 
         mpfr_mat_clear(a);
     }

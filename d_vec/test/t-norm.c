@@ -52,7 +52,7 @@ main(void)
 
         _d_vec_randtest(a, state, len);
 
-        x = _d_vec_innerprod(a, a, len);
+        x = _d_vec_dot(a, a, len);
         x = sqrt(x);
         y = _d_vec_norm(a, len);
 
