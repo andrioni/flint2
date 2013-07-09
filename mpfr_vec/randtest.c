@@ -31,7 +31,7 @@
 #include "ulong_extras.h"
 
 void
-_mpfr_randtest(mpfr * vec, flint_rand_t state, slong length)
+_mpfr_vec_randtest(mpfr * vec, flint_rand_t state, slong length)
 {
     slong i, sparseness;
 

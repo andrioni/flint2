@@ -27,6 +27,11 @@
 #ifndef MFPR_VEC_H
 #define MPFR_VEC_H
 
+#undef ulong /* interferes with system includes */
+#include <stdlib.h>
+#include <stdio.h>
+#define ulong mp_limb_t
+
 #include <gmp.h>
 #include <mpfr.h> 
 
@@ -57,6 +62,17 @@ void _mpfr_vec_swap(mpfr * vec1, mpfr * vec2, slong length);
 /* Randomisation */
 
 void _mpfr_vec_randtest(mpfr * vec1, flint_rand_t state, slong length);
+
+/* Input and output */
+
+int _mpfr_vec_fprint(FILE * file, const mpfr * vec, slong length,
+                                            mpfr_prec_t prec);
+
+static __inline__
+int _mpfr_vec_print(const mpfr * vec, slong length, mpfr_prec_t prec)
+{
+    return _mpfr_vec_fprint(stdout, vec, length, prec);
+}
 
 /* Addition */
 

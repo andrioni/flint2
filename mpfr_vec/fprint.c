@@ -19,44 +19,31 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2010 William Hart
+    Copyright (C) 2013 Alessandro Andrioni
 
 ******************************************************************************/
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <gmp.h>
-#include <mpfr.h>
 #include "flint.h"
 #include "mpfr_vec.h"
-#include "ulong_extras.h"
 
 int
-main(void)
+_mpfr_vec_fprint(FILE * file, const mpfr * vec, slong length, mpfr_prec_t prec)
 {
-    int i;
-    flint_rand_t state;
-    flint_randinit(state);
+    int r;
+    slong i;
 
-    printf("init/clear....");
-    fflush(stdout);
-
-    for (i = 0; i < 10000 * flint_test_multiplier(); i++)
+    r = fprintf(file, "%li", length);
+    if ((length > 0) && (r > 0))
     {
-        mpfr *a;
-        slong j, length = n_randint(state, 100);
-        mpfr_prec_t prec = n_randint(state, 200) + MPFR_PREC_MIN;
-
-        a = _mpfr_vec_init(length, prec);
-
-        for (j = 0; j < length; j++)
-            mpfr_set_ui(a + j, 0, MPFR_RNDN);
-
-        _mpfr_vec_clear(a, length);
+        r = fputc(' ', file);
+        for (i = 0; (i < length) && (r > 0); i++)
+        {
+            r = fputc(' ', file);
+            if (r > 0)
+                r = mpfr_fprintf(file, "%.*Rf", prec, vec + i);
+        }
     }
 
-    flint_randclear(state);
-
-    printf("PASS\n");
-    return 0;
+    return r;
 }
