@@ -25,26 +25,25 @@
 
 #include "d_mat.h"
 
-int
-d_mat_approx(const d_mat_t mat1, const d_mat_t mat2, double tol)
+void
+d_mat_gram_schmidt(d_mat_t B, const d_mat_t A)
 {
-    slong j;
+    slong i, j;
+    double inn;
 
-    if (mat1->r != mat2->r || mat1->c != mat2->c)
+    if (B->c < 1)
+        return;
+
+    if (B != A)
+        d_mat_set(B, A);
+
+    for (i = 0; i < B->r; i++)
     {
-        return 0;
-    }
-
-    if (mat1->r == 0 || mat1->c == 0)
-        return 1;
-
-    for (j = 0; j < mat1->r; j++)
-    {
-        if (!_d_vec_approx(mat1->rows[j], mat2->rows[j], mat1->c, tol))
+        _d_vec_normalise(B->rows[i], B->rows[i], B->c);
+        for (j = i + 1; j < B->r; j++)
         {
-            return 0;
+            inn = _d_vec_dot(B->rows[i], B->rows[j], B->c);
+            _d_vec_scalar_submul_d(B->rows[j], B->rows[i], B->c, inn);
         }
     }
-
-    return 1;
 }

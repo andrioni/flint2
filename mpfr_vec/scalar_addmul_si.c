@@ -1,4 +1,4 @@
-/*=============================================================================
+/*============================================================================
 
     This file is part of FLINT.
 
@@ -16,12 +16,12 @@
     along with FLINT; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-=============================================================================*/
-/******************************************************************************
+===============================================================================*/
+/****************************************************************************
 
-    Copyright (C) 2013 Alessandro Andrioni
-
-******************************************************************************/
+   Copyright (C) 2013 Alessandro Andrioni
+   
+*****************************************************************************/
 
 #include <stdlib.h>
 #include <gmp.h>
@@ -29,14 +29,19 @@
 #include "flint.h"
 #include "mpfr_vec.h"
 
-int
-_mpfr_vec_is_zero(const mpfr * vec, slong length)
+void
+_mpfr_vec_scalar_addmul_si(mpfr * res, const mpfr * vec, slong length, slong c)
 {
     slong i;
+    mpfr_t tmp;
+
+    mpfr_init2(tmp, mpfr_get_prec(res));
 
     for (i = 0; i < length; i++)
-        if (!mpfr_zero_p(vec + i))
-            return 0;
+    {
+        mpfr_mul_si(tmp, vec + i, c, MPFR_RNDN);
+        mpfr_add(res + i, res + i, tmp, MPFR_RNDN);
+    }
 
-    return 1;
+    mpfr_clear(tmp);
 }

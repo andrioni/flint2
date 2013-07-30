@@ -25,26 +25,37 @@
 
 #include "d_mat.h"
 
-int
-d_mat_approx(const d_mat_t mat1, const d_mat_t mat2, double tol)
+void
+d_mat_qr_gso(d_mat_t Q, d_mat_t R, const d_mat_t A)
 {
-    slong j;
+    slong i, j;
 
-    if (mat1->r != mat2->r || mat1->c != mat2->c)
+    if (Q->c < 1)
+        return;
+
+    if (Q != A)
+        d_mat_set(Q, A);
+
+    d_mat_transpose(Q, Q);
+
+    if (R == A)
     {
-        return 0;
+        printf("R should be different from A\n");
+        abort();
     }
 
-    if (mat1->r == 0 || mat1->c == 0)
-        return 1;
+    d_mat_zero(R);
 
-    for (j = 0; j < mat1->r; j++)
+    for (i = 0; i < Q->r; i++)
     {
-        if (!_d_vec_approx(mat1->rows[j], mat2->rows[j], mat1->c, tol))
+        d_mat_entry(R, i, i) = _d_vec_norm(Q->rows[i], Q->c);
+        _d_vec_scalar_div_d(Q->rows[i], Q->rows[i], Q->c, d_mat_entry(R, i, i));
+        for (j = i + 1; j < Q->r; j++)
         {
-            return 0;
+            d_mat_entry(R, i, j) = _d_vec_dot(Q->rows[i], Q->rows[j], Q->c);
+            _d_vec_scalar_submul_d(Q->rows[j], Q->rows[i], Q->c, d_mat_entry(R, i, j));
         }
     }
 
-    return 1;
+    d_mat_transpose(Q, Q);
 }

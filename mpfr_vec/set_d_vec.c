@@ -23,28 +23,16 @@
 
 ******************************************************************************/
 
-#include "d_mat.h"
+#include <stdlib.h>
+#include <gmp.h>
+#include <mpfr.h>
+#include "flint.h"
+#include "mpfr_vec.h"
 
-int
-d_mat_approx(const d_mat_t mat1, const d_mat_t mat2, double tol)
+void
+_mpfr_vec_set_d_vec(mpfr * vec1, const double * vec2, slong length)
 {
-    slong j;
-
-    if (mat1->r != mat2->r || mat1->c != mat2->c)
-    {
-        return 0;
-    }
-
-    if (mat1->r == 0 || mat1->c == 0)
-        return 1;
-
-    for (j = 0; j < mat1->r; j++)
-    {
-        if (!_d_vec_approx(mat1->rows[j], mat2->rows[j], mat1->c, tol))
-        {
-            return 0;
-        }
-    }
-
-    return 1;
+    slong i;
+    for (i = 0; i < length; i++)
+        mpfr_set_d(vec1 + i, vec2[i], MPFR_RNDN);
 }

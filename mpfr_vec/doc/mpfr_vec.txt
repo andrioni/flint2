@@ -31,7 +31,7 @@
 
 *******************************************************************************
 
-mpfr * _mpfr_vec_init(slong len, mpfr_prec_t prec)
+mpfr * _mpfr_vec_init(slong length, mpfr_prec_t prec)
 
     Returns a vector of the given length of initialised \code{mpfr}'s 
     with the given exact precision.
@@ -42,36 +42,290 @@ void _mpfr_vec_clear(mpfr * vec, slong len)
 
 *******************************************************************************
 
-    Arithmetic
+    Randomisation
 
 *******************************************************************************
 
-void _mpfr_vec_zero(mpfr * vec, slong len)
+void _mpfr_vec_randtest(mpfr * f, flint_rand_t state, 
+                        slong length)
 
-    Zeros the vector \code{(vec, len)}.
+    Sets the entries of a vector of the given length to random \code{mpfr}'s'
+    using \code{mpfr_urandomb}.
 
-void _mpfr_vec_set(mpfr * vec1, mpfr * vec2, slong len)
 
-    Copies the vector \code{vec2} of the given length into \code{vec1}. 
-    No check is made to ensure \code{vec1} and \code{vec2} are different.
+*******************************************************************************
 
-void _mpfr_vec_add(mpfr * res, mpfr * vec1, mpfr * vec2, slong len)
+    Input and output
 
-    Adds the given vectors of the given length together and stores the 
-    result in \code{res}.
+*******************************************************************************
 
-void _mpfr_vec_scalar_mul_mpfr(mpfr * res, mpfr * vec, slong len, mpfr_t c)
+int _mpfr_vec_fprint(FILE * file, const mpfr * vec, slong length,
+                                            mpfr_prec_t prec)
 
-    Multiplies the vector with given length by the scalar $c$ and 
-    sets \code{res} to the result.
+    Prints the vector of given length to the stream \code{file}. The 
+    format is the length followed by two spaces, then a space separated 
+    list of elements with \code{prec} decimal digits. If the length is 
+    zero, only $0$ is printed.
+
+    In case of success, returns a positive value.  In case of failure, 
+    returns a non-positive value.
+
+int _mpfr_vec_print(const mpfr * vec, slong length)
+
+    Prints the vector of given length to \code{stdout}.
+
+    For further details, see \code{_mpfr_vec_fprint()}.
+
+*******************************************************************************
+
+    Conversions
+
+*******************************************************************************
+
+void _mpfr_vec_set_d_vec(mpfr * vec1, const double * vec2, slong length)
+
+    Converts a vector of doubles \code{(vec2, length)} to a vector of 
+    \code{mpfr}'s.
+
+void _mpfr_vec_set_fmpz_vec(mpfr * vec1, const fmpz * vec2, slong length)
+
+    Converts a vector of \code{fmpz}'s \code{(vec2, length)} to a vector of
+    \code{mpfr}'s using GMP's \{mpz}'s as an intermediary form.
+
+void _mpfr_vec_set_fmpq_vec(mpfr * vec1, const fmpq * vec2, slong length)
+
+    Converts a vector of \code{fmpq}'s \code{(vec2, length)} to a vector of
+    \code{mpfr}'s using GMP's \{mpq}'s as an intermediary form.
+
+*******************************************************************************
+
+    Assignment and basic manipulation
+
+*******************************************************************************
+
+void _mpfr_vec_set(mpfr * vec1, const mpfr * vec2, slong length)
+
+    Makes a copy of \code{(vec2, length)} into \code{vec1}.
+
+void _mpfr_vec_swap(mpfr * vec1, mpfr * vec2, slong length)
+
+    Swaps the integers in \code{(vec1, length)} and \code{(vec2, length)}.
+
+void _mpfr_vec_zero(mpfr * vec, slong length)
+
+    Zeros the entries of \code{(vec, length)}.
+
+void _mpfr_vec_one(mpfr * vec, slong length)
+
+    Fills with ones the entries of \code{(vec, length)}.
+
+void _mpfr_vec_neg(mpfr * vec1, const mpfr * vec2, slong length)
+
+    Negates \code{(vec2, length)} and places it into \code{vec1}.
+
+*******************************************************************************
+
+    Comparison
+
+*******************************************************************************
+
+int _mpfr_vec_approx(const mpfr * vec1, const mpfr * vec2,
+                                slong length, mpfr_prec_t prec, double tol)
+
+    Compares two vectors of the given length and returns $1$ if they are 
+    approximately equal, otherwise returns $0$. Uses \code{prec} bits as
+    the precision of the intermediary calculations.
+
+    Two vectors are approximately equal with tolerance \code{tol} if the
+    difference between each corresponding entry is smaller than
+    $\epsilon_m * tol * (||a|| + ||b||)$, where $epsilon_m$ is
+    the machine epsilon given \code{prec} bits of precision.
+
+int _mpfr_vec_equal(const mpfr * vec1, const mpfr * vec2, slong length)
+
+    Compares two vectors of the given length and returns $1$ if they are 
+    equal, otherwise returns $0$.
+
+int _mpfr_vec_is_zero(const mpfr * vec, slong length)
+
+    Returns $1$ if \code{(vec, length)} is zero, and $0$ otherwise.
+
+*******************************************************************************
+
+    Addition and subtraction
+
+*******************************************************************************
+
+void _mpfr_vec_add(mpfr * res, const mpfr * vec1, 
+                               const mpfr * vec2, slong length)
+
+    Sets \code{(res, length)} to the sum of \code{(vec1, length)} 
+    and \code{(vec2, length)}.
+
+void _mpfr_vec_sub(mpfr * res, const mpfr * vec1, 
+                               const mpfr * vec2, slong length)
+
+    Sets \code{(res, length)} to \code{(vec1, length)} minus 
+    \code{(vec2, length)}.
+
+*******************************************************************************
+
+    Inner product and norm
+
+*******************************************************************************
+
+void _mpfr_vec_dot(mpfr_t res, const mpfr * vec1, 
+                                const mpfr * vec2, slong len)
+
+   Sets \code{res} to the dot product of \code{(vec1, len)} with 
+    \code{(vec2, len)}.
+
+void _mpfr_vec_norm(mpfr_t res, const mpfr * vec, slong length)
+
+   Sets \code{res} to the Euclidean norm of \code{(vec, length)}.
+
+*******************************************************************************
+
+    Scalar multiplication and division
+
+*******************************************************************************
 
 void _mpfr_vec_scalar_mul_2exp(mpfr * res, mpfr * vec, slong len,
                                                        mpfr_prec_t exp)
 
     Multiplies the given vector of the given length by \code{2^exp}.
 
-void _mpfr_vec_dot(mpfr_t res, mpfr * vec1, mpfr * vec2, slong len)
+void _mpfr_vec_scalar_mul_mpfr(mpfr * vec1, 
+                                const mpfr * vec2, slong len2, mpfr_t c)
 
-   Sets \code{res} to the scalar product of \code{(vec1, len)} with 
-    \code{(vec2, len)}. Assumes \code{len > 0}.
+    Sets \code{(vec1, len2)} to \code{(vec2, len2)} multiplied by $c$, 
+    where $c$ is a \code{mpfr}.
+
+void _mpfr_vec_scalar_mul_fmpz(mpfr * vec1, 
+                                const mpfr * vec2, slong len2, fmpz_t c)
+
+    Sets \code{(vec1, len2)} to \code{(vec2, len2)} multiplied by $c$, 
+    where $c$ is a \code{fmpz}.
+
+void _mpfr_vec_scalar_mul_d(mpfr * vec1, 
+                                const mpfr * vec2, slong len2, double c)
+
+    Sets \code{(vec1, len2)} to \code{(vec2, len2)} multiplied by $c$, 
+    where $c$ is a \code{double}.
+
+void _mpfr_vec_scalar_mul_si(mpfr * vec1,
+                                const mpfr * vec2, slong len2, slong c)
+
+    Sets \code{(vec1, len2)} to \code{(vec2, len2)} multiplied by $c$, 
+    where $c$ is a \code{slong}.
+
+void _mpfr_vec_scalar_mul_ui(mpfr * vec1,
+                                const mpfr * vec2, slong len2, ulong c)
+
+    Sets \code{(vec1, len2)} to \code{(vec2, len2)} multiplied by $c$, 
+    where $c$ is an \code{ulong}.
+
+void _mpfr_vec_scalar_div_fmpz(mpfr * vec1, 
+                                const mpfr * vec2, slong len2, fmpz_t c)
+
+    Sets \code{(vec1, len2)} to \code{(vec2, len2)} multiplied by $c$, 
+    where $c$ is a \code{fmpz}.
+
+void _mpfr_vec_scalar_div_mpfr(mpfr * vec1, 
+                                const mpfr * vec2, slong len2, mpfr_t c)
+
+    Sets \code{(vec1, len2)} to \code{(vec2, len2)} multiplied by $c$, 
+    where $c$ is a \code{mpfr}.
+
+void _mpfr_vec_scalar_div_d(mpfr * vec1, 
+                                const mpfr * vec2, slong len2, double c)
+
+    Sets \code{(vec1, len2)} to \code{(vec2, len2)} multiplied by $c$, 
+    where $c$ is a \code{double}.
+
+void _mpfr_vec_scalar_div_si(mpfr * vec1,
+                                const mpfr * vec2, slong len2, slong c)
+
+    Sets \code{(vec1, len2)} to \code{(vec2, len2)} multiplied by $c$, 
+    where $c$ is a \code{slong}.
+
+void _mpfr_vec_scalar_div_ui(mpfr * vec1,
+                                const mpfr * vec2, slong len2, ulong c)
+
+    Sets \code{(vec1, len2)} to \code{(vec2, len2)} divided by $c$, 
+    where $c$ is an \code{ulong}.
+
+void _mpfr_vec_scalar_addmul_fmpz(mpfr * vec1, 
+                                const mpfr * vec2, slong len2, fmpz_t c)
+
+    Adds \code{(vec2, len2)} times $c$ to \code{(vec1, len2)}, where $c$ is a 
+    \code{fmpz}.
+
+void _mpfr_vec_scalar_addmul_mpfr(mpfr * vec1, 
+                                const mpfr * vec2, slong len2, mpfr_t c)
+
+    Adds \code{(vec2, len2)} times $c$ to \code{(vec1, len2)}, where $c$ is a 
+    \code{mpfr}.
+
+void _mpfr_vec_scalar_addmul_d(mpfr * vec1, 
+                                const mpfr * vec2, slong len2, double c)
+
+    Adds \code{(vec2, len2)} times $c$ to \code{(vec1, len2)}, where $c$ is a 
+    \code{double}.
+
+void _mpfr_vec_scalar_addmul_si(mpfr * vec1, 
+                                const mpfr * vec2, slong len2, slong c)
+
+    Adds \code{(vec2, len2)} times $c$ to \code{(vec1, len2)}, where $c$ is a 
+    \code{slong}.
+
+void _mpfr_vec_scalar_addmul_ui(mpfr * vec1, 
+                                const mpfr * vec2, slong len2, ulong c)
+
+    Adds \code{(vec2, len2)} times $c$ to \code{(vec1, len2)}, where $c$ is an
+    \code{ulong}.
+
+void _mpfr_vec_scalar_submul_fmpz(mpfr * vec1, 
+                                const mpfr * vec2, slong len2, fmpz_t x)
+
+    Subtracts \code{(vec2, len2)} times $c$ from \code{(vec1, len2)}, 
+    where $c$ is a \code{fmpz}.
+
+void _mpfr_vec_scalar_submul_mpfr(mpfr * vec1, 
+                                const mpfr * vec2, slong len2, mpfr_t x)
+
+    Subtracts \code{(vec2, len2)} times $c$ from \code{(vec1, len2)}, 
+    where $c$ is a \code{mpfr}.
+
+void _mpfr_vec_scalar_submul_d(mpfr * vec1, 
+                                const mpfr * vec2, slong len2, double x)
+
+    Subtracts \code{(vec2, len2)} times $c$ from \code{(vec1, len2)}, 
+    where $c$ is a \code{double}.
+
+void _mpfr_vec_scalar_submul_si(mpfr * vec1, 
+                                const mpfr * vec2, slong len2, slong c)
+
+    Subtracts \code{(vec2, len2)} times $c$ from \code{(vec1, len2)}, 
+    where $c$ is a \code{slong}.
+
+void _mpfr_vec_scalar_submul_ui(mpfr * vec1, 
+                                const mpfr * vec2, slong len2, ulong c)
+
+    Subtracts \code{(vec2, len2)} times $c$ from \code{(vec1, len2)}, 
+    where $c$ is an \code{ulong}.
+
+*******************************************************************************
+
+    Sums and products
+
+*******************************************************************************
+
+double _d_vec_sum(const double * vec, slong len)
+
+    Returns the sum of the entries in \code{(vec, len)}.
+
+double _d_vec_prod(const double * vec, slong len)
+
+    Returns the product of the entries in \code{(vec, len)}.
 

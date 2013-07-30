@@ -23,28 +23,25 @@
 
 ******************************************************************************/
 
-#include "d_mat.h"
+#ifndef MPFR_EXTRAS_H
+#define MPFR_EXTRAS_H
 
-int
-d_mat_approx(const d_mat_t mat1, const d_mat_t mat2, double tol)
-{
-    slong j;
+#include <gmp.h>
+#include <mpfr.h> 
+#include "flint.h"
+#include "fmpz.h"
 
-    if (mat1->r != mat2->r || mat1->c != mat2->c)
-    {
-        return 0;
-    }
+#ifdef __cplusplus
+ extern "C" {
+#endif
 
-    if (mat1->r == 0 || mat1->c == 0)
-        return 1;
+int mpfr_approx_p(const mpfr_t op1, const mpfr_t op2, mpfr_prec_t prec,
+                                                double tol);
 
-    for (j = 0; j < mat1->r; j++)
-    {
-        if (!_d_vec_approx(mat1->rows[j], mat2->rows[j], mat1->c, tol))
-        {
-            return 0;
-        }
-    }
+/*int mpfr_set_fmpz(mpfr_t rop, const fmpz_t op, mpfr_rnd_t rnd);*/
 
-    return 1;
+#ifdef __cplusplus
 }
+#endif
+
+#endif

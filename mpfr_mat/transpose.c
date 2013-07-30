@@ -27,16 +27,42 @@
 #include <gmp.h>
 #include <mpfr.h>
 #include "flint.h"
-#include "mpfr_vec.h"
+#include "mpfr_mat.h"
 
-int
-_mpfr_vec_is_zero(const mpfr * vec, slong length)
+void
+mpfr_mat_transpose(mpfr_mat_t rop, const mpfr_mat_t op)
 {
-    slong i;
+    slong i, j;
 
-    for (i = 0; i < length; i++)
-        if (!mpfr_zero_p(vec + i))
-            return 0;
+    if (rop->r != op->c || rop->c != op->r)
+    {
+        printf("Exception (mpfr_mat_transpose). Incompatible dimensions.\n");
+        abort();
+    }
 
-    return 1;
+    if (rop->r == 0 || rop->c == 0)
+        return;
+
+    if (op == rop)  /* In-place, guaranteed to be square */
+    {
+        mpfr_t tmp;
+        mpfr_prec_t prec = mpfr_get_prec(mpfr_mat_entry(rop, 0, 0));
+        mpfr_init2(tmp, prec);
+
+        for (i = 0; i < op->r - 1; i++)
+            for (j = i + 1; j < op->c; j++)
+            {
+                mpfr_set(tmp, mpfr_mat_entry(op, i, j), MPFR_RNDN);
+                mpfr_set(mpfr_mat_entry(op, i, j), mpfr_mat_entry(op, j, i), MPFR_RNDN);
+                mpfr_set(mpfr_mat_entry(op, j, i), tmp, MPFR_RNDN);
+            }
+
+        mpfr_clear(tmp);
+    }
+    else  /* Not aliased; general case */
+    {
+        for (i = 0; i < rop->r; i++)
+            for (j = 0; j < rop->c; j++)
+                mpfr_set(mpfr_mat_entry(rop, i, j), mpfr_mat_entry(op, j, i), MPFR_RNDN);
+    }
 }

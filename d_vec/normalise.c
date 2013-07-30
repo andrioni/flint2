@@ -23,28 +23,22 @@
 
 ******************************************************************************/
 
-#include "d_mat.h"
+#include "flint.h"
+#include "d_vec.h"
 
-int
-d_mat_approx(const d_mat_t mat1, const d_mat_t mat2, double tol)
+void
+_d_vec_normalise(double * vec1, const double * vec2, slong len)
 {
-    slong j;
-
-    if (mat1->r != mat2->r || mat1->c != mat2->c)
+    if (len == 1)
     {
-        return 0;
+        vec1[0] = vec2[0] / fabs(vec2[0]);
     }
-
-    if (mat1->r == 0 || mat1->c == 0)
-        return 1;
-
-    for (j = 0; j < mat1->r; j++)
+    else
     {
-        if (!_d_vec_approx(mat1->rows[j], mat2->rows[j], mat1->c, tol))
-        {
-            return 0;
-        }
-    }
+        slong i;
+        double norm = _d_vec_norm(vec2, len);
 
-    return 1;
+        for (i = 0; i < len; i++)
+            vec1[i] = vec2[i] / norm;
+    }
 }

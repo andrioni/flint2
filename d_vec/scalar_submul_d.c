@@ -23,28 +23,13 @@
 
 ******************************************************************************/
 
-#include "d_mat.h"
+#include "flint.h"
+#include "d_vec.h"
 
-int
-d_mat_approx(const d_mat_t mat1, const d_mat_t mat2, double tol)
+void
+_d_vec_scalar_submul_d(double * vec1, const double * vec2, slong len, double c)
 {
-    slong j;
-
-    if (mat1->r != mat2->r || mat1->c != mat2->c)
-    {
-        return 0;
-    }
-
-    if (mat1->r == 0 || mat1->c == 0)
-        return 1;
-
-    for (j = 0; j < mat1->r; j++)
-    {
-        if (!_d_vec_approx(mat1->rows[j], mat2->rows[j], mat1->c, tol))
-        {
-            return 0;
-        }
-    }
-
-    return 1;
+    slong i;
+    for (i = 0; i < len; i++)
+        *(vec1 + i) = *(vec1 + i) - *(vec2 + i) * c;
 }

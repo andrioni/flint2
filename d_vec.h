@@ -87,16 +87,9 @@ double _d_vec_dot(const double * vec1, const double * vec2, slong len);
 
 double _d_vec_norm(const double * vec1, slong len);
 
+void _d_vec_normalise(double * vec1, const double * vec2, slong len);
+
 /* Scalar operations */
-
-void _d_vec_scalar_add_si(double * vec1, const double * vec2, 
-                                                        slong len, slong c);
-
-void _d_vec_scalar_add_ui(double * vec1, const double * vec2,
-                                                        slong len, ulong c);
-
-void _d_vec_scalar_add_d(double * vec1, const double * vec2,
-                                                        slong len, double c);
 
 void _d_vec_scalar_mul_si(double * vec1, const double * vec2, 
                                                         slong len, slong c);
@@ -114,6 +107,24 @@ void _d_vec_scalar_div_ui(double * vec1, const double * vec2,
                                                         slong len, ulong c);
 
 void _d_vec_scalar_div_d(double * vec1, const double * vec2,
+                                                        slong len, double c);
+
+void _d_vec_scalar_addmul_si(double * vec1, const double * vec2, 
+                                                        slong len, slong c);
+
+void _d_vec_scalar_addmul_ui(double * vec1, const double * vec2,
+                                                        slong len, ulong c);
+
+void _d_vec_scalar_addmul_d(double * vec1, const double * vec2,
+                                                        slong len, double c);
+
+void _d_vec_scalar_submul_si(double * vec1, const double * vec2, 
+                                                        slong len, slong c);
+
+void _d_vec_scalar_submul_ui(double * vec1, const double * vec2,
+                                                        slong len, ulong c);
+
+void _d_vec_scalar_submul_d(double * vec1, const double * vec2,
                                                         slong len, double c);
 
 #ifdef __cplusplus

@@ -19,32 +19,43 @@
 =============================================================================*/
 /******************************************************************************
 
-    Copyright (C) 2013 Alessandro Andrioni
-
+   Copyright (C) 2013 Alessandro Andrioni
+   
 ******************************************************************************/
 
-#include "d_mat.h"
+#include <stdlib.h>
+#include <gmp.h>
+#include <mpfr.h>
+#include "flint.h"
+#include "mpfr_vec.h"
 
 int
-d_mat_approx(const d_mat_t mat1, const d_mat_t mat2, double tol)
+mpfr_approx_p(const mpfr_t op1, const mpfr_t op2, mpfr_prec_t prec, double tol)
 {
-    slong j;
-
-    if (mat1->r != mat2->r || mat1->c != mat2->c)
-    {
-        return 0;
-    }
-
-    if (mat1->r == 0 || mat1->c == 0)
+    if (op1 == op2)
         return 1;
-
-    for (j = 0; j < mat1->r; j++)
+    else if (mpfr_equal_p(op1, op2))
+        return 1;
+    else
     {
-        if (!_d_vec_approx(mat1->rows[j], mat2->rows[j], mat1->c, tol))
-        {
-            return 0;
-        }
-    }
+        slong ret = 1;
+        mpfr_t a, b, tmp, eps;
+        mpfr_inits2(prec, a, b, tmp, eps, (mpfr_ptr) 0);
 
-    return 1;
+        mpfr_abs(a, op1, MPFR_RNDN);
+        mpfr_abs(b, op2, MPFR_RNDN);
+        mpfr_set_ui(eps, 1, MPFR_RNDN);
+        mpfr_div_2si(eps, eps, prec - 1, MPFR_RNDN);
+        mpfr_add(tmp, a, b, MPFR_RNDN);
+        mpfr_mul(eps, eps, tmp, MPFR_RNDN);
+        mpfr_mul_d(eps, eps, tol, MPFR_RNDN);
+        mpfr_sub(tmp, a, b, MPFR_RNDN);
+        mpfr_abs(tmp, tmp, MPFR_RNDN);
+
+        if (mpfr_greater_p(tmp, eps))
+            ret = 0;
+
+        mpfr_clears(a, b, tmp, eps, (mpfr_ptr) 0);
+        return ret;
+    }
 }

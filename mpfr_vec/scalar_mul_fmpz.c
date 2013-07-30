@@ -1,4 +1,4 @@
-/*=============================================================================
+/*============================================================================
 
     This file is part of FLINT.
 
@@ -16,27 +16,30 @@
     along with FLINT; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-=============================================================================*/
-/******************************************************************************
+===============================================================================*/
+/****************************************************************************
 
-    Copyright (C) 2013 Alessandro Andrioni
-
-******************************************************************************/
+   Copyright (C) 2013 Alessandro Andrioni
+   
+*****************************************************************************/
 
 #include <stdlib.h>
 #include <gmp.h>
 #include <mpfr.h>
 #include "flint.h"
+#include "fmpz.h"
 #include "mpfr_vec.h"
 
-int
-_mpfr_vec_is_zero(const mpfr * vec, slong length)
+void
+_mpfr_vec_scalar_mul_fmpz(mpfr * res, const mpfr * vec, slong length, fmpz_t c)
 {
     slong i;
+    __mpz_struct *z;
 
     for (i = 0; i < length; i++)
-        if (!mpfr_zero_p(vec + i))
-            return 0;
-
-    return 1;
+    {
+        z = _fmpz_promote_val(c);
+        mpfr_mul_z(res + i, vec + i, z, MPFR_RNDN);
+        _fmpz_demote_val(c);
+    }
 }

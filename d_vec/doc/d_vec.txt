@@ -1,0 +1,253 @@
+/*=============================================================================
+
+    This file is part of FLINT.
+
+    FLINT is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    FLINT is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with FLINT; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+=============================================================================*/
+/******************************************************************************
+
+    Copyright (C) 2010 William Hart
+    Copyright (C) 2013 Alessandro Andrioni
+
+******************************************************************************/
+
+*******************************************************************************
+
+    Memory management
+
+*******************************************************************************
+
+double * _d_vec_init(slong len)
+
+    Returns an initialised vector of doubles of given length.
+
+void _d_vec_clear(double * vec, slong len)
+
+    Clears the entries of \code{(vec, len)} and frees the space allocated 
+    for \code{vec}.
+
+*******************************************************************************
+
+    Randomisation
+
+*******************************************************************************
+
+void _d_vec_randtest(double * f, flint_rand_t state, 
+                        slong len)
+
+    Sets the entries of a vector of the given length to random doubles in the 
+    interval \code{(0.5, 1]}.
+
+*******************************************************************************
+
+    Input and output
+
+*******************************************************************************
+
+int _d_vec_fprint(FILE * file, const double * vec, slong len)
+
+    Prints the vector of given length to the stream \code{file}. The 
+    format is the length followed by two spaces, then a space separated 
+    list of coefficients. If the length is zero, only $0$ is printed.
+
+    In case of success, returns a positive value.  In case of failure, 
+    returns a non-positive value.
+
+int _d_vec_print(const double * vec, slong len)
+
+    Prints the vector of given length to \code{stdout}.
+
+    For further details, see \code{_d_vec_fprint()}.
+
+*******************************************************************************
+
+    Assignment and basic manipulation
+
+*******************************************************************************
+
+void _d_vec_set(double * vec1, const double * vec2, slong len2)
+
+    Makes a copy of \code{(vec2, len2)} into \code{vec1}.
+
+void _d_vec_swap(double * vec1, double * vec2, slong len2)
+
+    Swaps the integers in \code{(vec1, len2)} and \code{(vec2, len2)}.
+
+void _d_vec_zero(double * vec, slong len)
+
+    Zeros the entries of \code{(vec, len)}.
+
+void _d_vec_one(double * vec, slong len)
+
+    Fills with ones the entries of \code{(vec, len)}.
+
+void _d_vec_neg(double * vec1, const double * vec2, slong len2)
+
+    Negates \code{(vec2, len2)} and places it into \code{vec1}.
+
+*******************************************************************************
+
+    Comparison
+
+*******************************************************************************
+
+int _d_vec_approx(const double * vec1, const double * vec2,
+                                            slong len, double tol)
+
+    Compares two vectors of the given length and returns $1$ if they are 
+    approximately equal, otherwise returns $0$.
+
+    Two vectors are approximately equal with tolerance \code{tol} if the
+    difference between each corresponding entry is smaller than
+    $\epsilon_m * tol * (||a|| + ||b||)$, where $epsilon_m$ is
+    the machine epsilon.
+
+int _d_vec_equal(const double * vec1, const double * vec2, slong len)
+
+    Compares two vectors of the given length and returns $1$ if they are 
+    equal, otherwise returns $0$.
+
+int _d_vec_is_zero(const double * vec, slong len)
+
+    Returns $1$ if \code{(vec, len)} is zero, and $0$ otherwise.
+
+*******************************************************************************
+
+    Addition and subtraction
+
+*******************************************************************************
+
+void _d_vec_add(double * res, const double * vec1, 
+				                            const double * vec2, slong len2)
+
+    Sets \code{(res, len2)} to the sum of \code{(vec1, len2)} 
+    and \code{(vec2, len2)}.
+
+void _d_vec_sub(double * res, const double * vec1, 
+				               const double * vec2, slong len2)
+
+    Sets \code{(res, len2)} to \code{(vec1, len2)} minus \code{(vec2, len2)}.
+
+*******************************************************************************
+
+    Inner product and norm
+
+*******************************************************************************
+
+double _d_vec_dot(const double * vec1, const double * vec2, slong len)
+
+   Returns the dot product of \code{(vec1, len)} with 
+    \code{(vec2, len)}.
+
+double _d_vec_norm(const double * vec, slong len)
+
+   Returns the Euclidean norm of \code{(vec, len)}.
+
+void _d_vec_normalise(double * vec1, const double * vec2, slong len)
+
+   Sets \code{(vec1, len)} to the normalisation of \code{(vec2, len)}.
+
+*******************************************************************************
+
+    Scalar multiplication and division
+
+*******************************************************************************
+
+void _d_vec_scalar_mul_d(double * vec1, 
+                                const double * vec2, slong len2, double c)
+
+    Sets \code{(vec1, len2)} to \code{(vec2, len2)} multiplied by $c$, 
+    where $c$ is a \code{double}.
+
+void _d_vec_scalar_mul_si(double * vec1,
+                                const double * vec2, slong len2, slong c)
+
+    Sets \code{(vec1, len2)} to \code{(vec2, len2)} multiplied by $c$, 
+    where $c$ is a \code{slong}.
+
+void _d_vec_scalar_mul_ui(double * vec1,
+                                const double * vec2, slong len2, ulong c)
+
+    Sets \code{(vec1, len2)} to \code{(vec2, len2)} multiplied by $c$, 
+    where $c$ is an \code{ulong}.
+
+void _d_vec_scalar_div_d(double * vec1, 
+                                const double * vec2, slong len2, double c)
+
+    Sets \code{(vec1, len2)} to \code{(vec2, len2)} multiplied by $c$, 
+    where $c$ is a \code{double}.
+
+void _d_vec_scalar_div_si(double * vec1,
+                                const double * vec2, slong len2, slong c)
+
+    Sets \code{(vec1, len2)} to \code{(vec2, len2)} multiplied by $c$, 
+    where $c$ is a \code{slong}.
+
+void _d_vec_scalar_div_ui(double * vec1,
+                                const double * vec2, slong len2, ulong c)
+
+    Sets \code{(vec1, len2)} to \code{(vec2, len2)} divided by $c$, 
+    where $c$ is an \code{ulong}.
+
+void _d_vec_scalar_addmul_d(double * vec1, 
+                                const double * vec2, slong len2, double c)
+
+    Adds \code{(vec2, len2)} times $c$ to \code{(vec1, len2)}, where $c$ is a 
+    \code{double}.
+
+void _d_vec_scalar_addmul_si(double * vec1, 
+                                const double * vec2, slong len2, slong c)
+
+    Adds \code{(vec2, len2)} times $c$ to \code{(vec1, len2)}, where $c$ is a 
+    \code{slong}.
+
+void _d_vec_scalar_addmul_ui(double * vec1, 
+                                const double * vec2, slong len2, ulong c)
+
+    Adds \code{(vec2, len2)} times $c$ to \code{(vec1, len2)}, where $c$ is an
+    \code{ulong}.
+
+void _d_vec_scalar_submul_d(double * vec1, 
+                                const double * vec2, slong len2, double x)
+
+    Subtracts \code{(vec2, len2)} times $c$ from \code{(vec1, len2)}, 
+    where $c$ is a \code{double}.
+
+void _d_vec_scalar_submul_si(double * vec1, 
+                                const double * vec2, slong len2, slong c)
+
+    Subtracts \code{(vec2, len2)} times $c$ from \code{(vec1, len2)}, 
+    where $c$ is a \code{slong}.
+
+void _d_vec_scalar_submul_ui(double * vec1, 
+                                const double * vec2, slong len2, ulong c)
+
+    Subtracts \code{(vec2, len2)} times $c$ from \code{(vec1, len2)}, 
+    where $c$ is an \code{ulong}.
+
+*******************************************************************************
+
+    Sums and products
+
+*******************************************************************************
+
+double _d_vec_sum(const double * vec, slong len)
+
+    Returns the sum of the entries in \code{(vec, len)}.
+
+double _d_vec_prod(const double * vec, slong len)
+
+    Returns the product of the entries in \code{(vec, len)}.

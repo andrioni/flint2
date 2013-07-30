@@ -20,7 +20,6 @@
 /******************************************************************************
 
     Copyright (C) 2010 William Hart
-    Copyright (C) 2013 Alessandro Andrioni
 
 ******************************************************************************/
 
@@ -31,12 +30,12 @@
 #include "mpfr_vec.h"
 
 void
-_mpfr_vec_dot(mpfr_t res, const mpfr * vec1, const mpfr * vec2, slong length)
+_mpfr_vec_norm(mpfr_t res, const mpfr * vec, slong length)
 {
     if (length <= 1)
     {
         if (length == 1)
-            mpfr_mul(res, vec1, vec2, MPFR_RNDN);
+            mpfr_abs(res, vec, MPFR_RNDN);
         else
             mpfr_set_ui(res, 0, MPFR_RNDN);
     }
@@ -44,16 +43,38 @@ _mpfr_vec_dot(mpfr_t res, const mpfr * vec1, const mpfr * vec2, slong length)
     {
         slong i;
         mpfr_prec_t prec = mpfr_get_prec(res);
-        mpfr_t tmp;
-        mpfr_init2(tmp, prec);
-    
-        mpfr_mul(res, vec1, vec2, MPFR_RNDN);
-        for (i = 1; i < length; i++)
+        mpfr_t scale, ssq, absv, tmp;
+
+        mpfr_inits2(prec, scale, ssq, absv, tmp, (mpfr_ptr) 0);
+
+        mpfr_set_ui(scale, 0, MPFR_RNDN);
+        mpfr_set_ui(ssq, 1, MPFR_RNDN);
+
+        for (i = 0; i < length; i++)
         {
-            mpfr_mul(tmp, vec1 + i, vec2 + i, MPFR_RNDN);
-            mpfr_add(res, res, tmp, MPFR_RNDN);
+            if (!mpfr_zero_p(vec + i))
+            {
+                mpfr_abs(absv, vec + i, MPFR_RNDN);
+                if (mpfr_less_p(scale, absv))
+                {
+                    mpfr_div(tmp, scale, absv, MPFR_RNDN);
+                    mpfr_mul(ssq, ssq, tmp, MPFR_RNDN);
+                    mpfr_mul(ssq, ssq, tmp, MPFR_RNDN);
+                    mpfr_add_ui(ssq, ssq, 1, MPFR_RNDN);
+                    mpfr_set(scale, absv, MPFR_RNDN);
+                }
+                else
+                {
+                    mpfr_div(tmp, absv, scale, MPFR_RNDN);
+                    mpfr_mul(tmp, tmp, tmp, MPFR_RNDN);
+                    mpfr_add(ssq, ssq, tmp, MPFR_RNDN);
+                }
+            }
         }
+
+        mpfr_sqrt(ssq, ssq, MPFR_RNDN);
+        mpfr_mul(res, scale, ssq, MPFR_RNDN);
     
-        mpfr_clear(tmp);
+        mpfr_clears(scale, ssq, absv, tmp, (mpfr_ptr) 0);
     }
 }
